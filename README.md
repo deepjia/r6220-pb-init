@@ -23,7 +23,7 @@ Copy router folder to /tmp of the router, then:
 ```
 sh /tmp/router/general.sh
 ```
-If you have customize sript:
+If you have customization sript:
 
 ```
 sh /tmp/router/custom.sh
@@ -33,7 +33,7 @@ Default root password is `admin`
 
 Reboot the router manually once finished.
 ## Customization
-Add custom.sh in router folder.
+To customize, add custom.sh in router folder.
 
 eg:
 
