@@ -142,7 +142,7 @@ server=/config.resilio.com/127.0.0.1#5353\nipset=/config.resilio.com/glist"
 /etc/init.d/dnsmasq restart
 cat /etc/firewall.user|grep glist || echo "ipset -N glist iphash">>/etc/firewall.user
 while true; do
-  echo "Apply transparent proxy to all network interface and devices? [y/n]"
+  echo "Apply transparent proxy to all network interfaces and devices? [y/n]"
   [ $ifallproxy ] && echo "Use preset value." || read -p "(Default: n):" ifallproxy
   case $ifallproxy in
     Y|y|yes ) noglan;break;;
@@ -203,7 +203,7 @@ wireless(){
 [ $wifissid ] && echo "Use preset value." || read -p "Input Wi-Fi SSID name:" wifissid
 [ $wifikey ] && echo "Use preset value." || read -p "Input Wi-Fi key:" -s wifikey
 echo "Configuring wireless network..."
-echo "Input 2.4G Channel: [y/n]"
+echo "Input 2.4G Channel: [auto/1/2/.../13]"
 [ $channel24 ] && echo "Use preset value." || read -p "(Default: auto):" channel24
 case $channel24 in
   [1-13] ) sed -i "/wifi-device 'ra'/,/wifi-iface 'default_ra'/{s/channel 'auto'/channel '${channel24}'/}" /etc/config/wireless
