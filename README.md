@@ -28,7 +28,10 @@ If you have customize sript:
 ```
 sh /tmp/router/custom.sh
 ```
-Default root password is `admin`.
+### Note：
+Default root password is `admin`
+
+Reboot the router manually once finished.
 ## Customization
 Add custom.sh in router folder.
 
