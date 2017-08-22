@@ -95,6 +95,7 @@ while true; do
   esac
 done
 echo "Configuring chinternet..."
+opkg remove dnsmasq && opkg install dnsmasq-full
 opkg install shadowsocks-libev simple-obfs coreutils-base64 curl
 echo "Enter the information of shadowsocks server. You can change it later in LuCI page."
 [ $ssaddr ] && echo "Use preset value." || read -p "Shadowsocks server address:" ssaddr
@@ -128,6 +129,7 @@ curl -s -L --insecure -o glist2dnsmasq.sh https://raw.githubusercontent.com/coke
 chmod +x shadowsocks glist2dnsmasq.sh
 cp shadowsocks /etc/init.d/
 cp glist2dnsmasq.sh /etc/
+mkdir /etc/dnsmasq.d
 uci add_list dhcp.@dnsmasq[0].confdir=/etc/dnsmasq.d
 uci commit dhcp
 /etc/glist2dnsmasq.sh -i -s glist -o /etc/dnsmasq.d/dnsmasq_glist_ipset.conf
@@ -195,7 +197,7 @@ echo -e  "config wifi-iface
 \toption encryption 'psk2'
 \toption network 'glan'
 ">>/etc/config/wireless
-echo -e "Interface '${green}glan${plain}' and Wi-Fi interface '${green}${wifissid}-G${plain}' created."
+echo -e "Interface 'glan' and Wi-Fi interface '${wifissid}-G' created."
 }
 
 
@@ -206,21 +208,23 @@ echo "Configuring wireless network..."
 echo "Input 2.4G Channel: [auto/1/2/.../13]"
 [ $channel24 ] && echo "Use preset value." || read -p "(Default: auto):" channel24
 case $channel24 in
-  [1-13] ) sed -i "/wifi-device 'ra'/,/wifi-iface 'default_ra'/{s/channel 'auto'/channel '${channel24}'/}" /etc/config/wireless
+  [1-13] ) sed -i "/wifi-device '\?ra'\?/,/wifi-device '\?rai'\?/{s/channel '\?auto'\?/channel '${channel24}'/}" /etc/config/wireless
 	;;
   * ) echo "Use auto channel."
 	;;
 esac
 #2.4G的SSID
-sed -i "/wifi-iface 'default_ra'/,/ssid/{s/ssid '.*'/ssid '${wifissid}'/}" /etc/config/wireless
+sed -i "/wifi-device '\?ra'\?/,/ssid/{s/ssid .*/ssid '${wifissid}'/}" /etc/config/wireless
 #5G的SSID
-sed -i "/wifi-iface 'default_rai'/,/ssid/{s/ssid '.*'/ssid '${wifissid}-5'/}" /etc/config/wireless
-sed -i "/smart '0'/d" /etc/config/wireless
-sed -i "s/encryption 'none'/encryption 'psk2'/" /etc/config/wireless
+sed -i "/wifi-device '\?rai'\?/,/ssid/{s/ssid .*/ssid '${wifissid}-5'/}" /etc/config/wireless
+#sed -i "/smart '\?0'\?/d" /etc/config/wireless
+sed -i "s/encryption '\?none'\?/encryption 'psk2'/" /etc/config/wireless
 sed -i "s/Wireless-G/${wifissid}-G/" /etc/config/wireless
+#awk -v wifikey="$wifikey" '/encryption/{print "\toption key '\''"wifikey"'\''\
+#\toption rssikick '\''-76'\''\
+#\toption rssiassoc '\''-75'\''"}1' /etc/config/wireless>/tmp/router/wireless
 awk -v wifikey="$wifikey" '/encryption/{print "\toption key '\''"wifikey"'\''\
-\toption rssikick '\''-68'\''\
-\toption rssiassoc '\''-75'\''"}1' /etc/config/wireless>/tmp/router/wireless
+\toption rssikick '\''-76'\''"}1' /etc/config/wireless>/tmp/router/wireless
 mv /tmp/router/wireless /etc/config/wireless
 }
 
@@ -233,3 +237,4 @@ wanconfig
 modifypkg
 ping -c 1 baidu.com && addpkg && shadowsocks
 wireless
+echo "Please reboot."
