@@ -1,4 +1,4 @@
-# R6220 PandoraBox Initialization Script
+# R6220 PandoraBox Initialization
 ## Introduction
 This is my initialization script for R6200 Pandorabox.
 
@@ -78,4 +78,5 @@ EOF
 sed -i "s/PasswordAuth 'on'/PasswordAuth 'off'/" /etc/config/dropbear
 sed -i "s/RootPasswordAuth 'on'/RootPasswordAuth 'off'/" /etc/config/dropbear
 /etc/init.d/dropbear restart
+reboot
 ```
