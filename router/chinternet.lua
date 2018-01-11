@@ -1,7 +1,7 @@
 module("luci.controller.chinternet", package.seeall)
 
 function index()
-	if not nixio.fs.access("/etc/shadowsocks.json") then
+	if not nixio.fs.access("/etc/ss.json") then
 		return
 	end
 

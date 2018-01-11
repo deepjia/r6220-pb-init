@@ -2,30 +2,34 @@
 ## Introduction
 This is my initialization script for R6200 Pandorabox.
 
-Only tested on macOS, but should also work on any Unix-like OS.
-
 ## Prerequisites
 Netgear R6220 with PandoraBox firmware.
 
-MacOS, Linux or any OS with SSH clients.
+Computer with macOS, Linux or any OS with SSH clients, and an ethernet port.
 
 ## Usage
-### Unix-like OS
+### macOS
+Only tested on macOS, but may also work on some Unix-like OS.
 
-```
+```bash
 bash init-r6220.sh
 ```
 
-### Other OS
+### Others
+Copy `router` folder to /tmp of the router via `scp`:
 
-Copy router folder to /tmp of the router, then:
-
+```bash
+scp - router root@192.168.1.1:/tmp
+ssh root@192.168.1.1
 ```
+Run general configuration script:
+
+```bash
 sh /tmp/router/general.sh
 ```
-If you have customization sript:
+If you have your own customization script:
 
-```
+```bash
 sh /tmp/router/custom.sh
 ```
 ### Note：
@@ -33,11 +37,11 @@ Default root password is `admin`
 
 Reboot the router manually once finished.
 ## Customization
-To customize, add custom.sh in router folder.
+To customize, add `custom.sh` in `router` folder.
 
 eg:
 
-```
+```bash
 #!/bin/bash
 
 # Parameters
@@ -62,8 +66,7 @@ config host\n\toption name 'Hostname'\n\toption mac 'aa:aa:aa:aa:aa:aa'\n\toptio
 # Firewall for specific lan ip
 echo "Configuring firewall..."
 cat /etc/firewall.user|grep glist || echo "ipset -N glist iphash">>/etc/firewall.user
-cat <<EOF>>/etc/firewall.user
-
+cat <<EOF >>/etc/firewall.user
 iptables -t nat -A PREROUTING -s 192.168.1.100 -p tcp -m set --match-set glist dst -j REDIRECT --to-port 1080
 iptables -t nat -A OUTPUT -s 192.168.1.100 -p tcp -m set --match-set glist dst -j REDIRECT --to-port 1080
 EOF
@@ -71,7 +74,7 @@ EOF
 
 # Dropbear
 echo "Configuring dropbear..."
-cat <<EOF>>/etc/dropbear/authorized_keys
+cat <<EOF >>/etc/dropbear/authorized_keys
 ssh-rsa AAAAAAAAAAAAAAAA user@hostname.local
 ssh-rsa AAAAAAAAAAAAAAAA user2@hostname2.local
 EOF

@@ -1,0 +1,15 @@
+#!/bin/sh /etc/rc.common
+START=95
+
+SERVICE_DAEMONIZE=1
+DAEMON_ARGS="-b -c /root/config.ini"
+
+start() {
+    service_start /usr/sbin/vhusbdmipsel $DAEMON_ARGS
+    echo "VirtualHere started."
+}
+
+stop() {
+    service_stop /usr/sbin/vhusbdmipsel
+    echo "VirtualHere stoped."
+}

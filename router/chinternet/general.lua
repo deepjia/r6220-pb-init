@@ -1,7 +1,7 @@
 local fs = require "nixio.fs"
-local conffile = "/etc/shadowsocks.json" 
+local conffile = "/etc/ss.json"
 
-f = SimpleForm("general", translate("Chinternet - General Settings"), translate("This is the config file for Shadowsocks. Do NOT modify local_port, unless you know what you are doing."))
+f = SimpleForm("general", translate("Chinternet - General Settings"), translate("This is the config file for SS. Do NOT modify local_port, unless you know what you are doing."))
 
 t = f:field(TextValue, "conf")
 t.rmempty = true
@@ -14,7 +14,7 @@ function f.handle(self, state, data)
 	if state == FORM_VALID then
 		if data.conf then
 			fs.writefile(conffile, data.conf:gsub("\r\n", "\n"))
-			luci.sys.call("/etc/init.d/shadowsocks restart >/dev/null")
+			luci.sys.call("/etc/init.d/ss restart >/dev/null")
 		end
 	end
 	return true

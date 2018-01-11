@@ -2,18 +2,18 @@
 START=95
 
 SERVICE_DAEMONIZE=1
-CONFIG=/etc/shadowsocks.json
+CONFIG=/etc/ss.json
 DNS=8.8.8.8:53
 TUNNEL_PORT=5353
 
 start() {
     service_start /usr/bin/ss-redir -c $CONFIG -b 0.0.0.0
     service_start /usr/bin/ss-tunnel -c $CONFIG -b 0.0.0.0 -u -l $TUNNEL_PORT -L $DNS
-    echo "Shadowsocks started."
+    echo "SS started."
 }
 
 stop() {
     service_stop /usr/bin/ss-redir
     service_stop /usr/bin/ss-tunnel
-    echo "Shadowsocks stoped."
+    echo "SS stoped."
 }
