@@ -79,7 +79,7 @@ src/gz openwrt_dist_luci http://openwrt-dist.sourceforge.net/packages/OpenWrt/lu
 EOF
 #dropbear支持scp但不支持sftp，可以安装openssh-sftp-server来支持，即使不安装也有scp
 opkg update
-opkg install openssh-sftp-server
+opkg install openssh-sftp-server luci-app-sqm
 opkg remove luci-i18n-vsftpd-zh-cn luci-app-vsftpd vsftpd
 }
 
